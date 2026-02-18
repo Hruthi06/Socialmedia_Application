@@ -13,6 +13,8 @@ public class User {
     private String username;
     private String password;
     private String role;
+    private String bio;
+    private String profilePicture;
     private boolean isBlocked = false;
 
     public User() {
@@ -44,6 +46,22 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public boolean isBlocked() {

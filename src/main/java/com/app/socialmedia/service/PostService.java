@@ -15,13 +15,16 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository,
+            FileStorageService fileStorageService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
     }
 
-    public Post createPost(Long userId, String content, String imageUrl) {
+    public Post createPost(Long userId, String content, org.springframework.web.multipart.MultipartFile file) {
         if (userId == null)
             throw new RuntimeException("User ID is null");
         Optional<User> userOpt = userRepository.findById(userId);
@@ -29,7 +32,19 @@ public class PostService {
             Post post = new Post();
             post.setUser(userOpt.get());
             post.setContent(content);
-            post.setImageUrl(imageUrl);
+
+            if (file != null && !file.isEmpty()) {
+                String fileName = fileStorageService.storeFile(file);
+                post.setMediaUrl("/uploads/" + fileName);
+
+                String contentType = file.getContentType();
+                if (contentType != null && contentType.startsWith("video")) {
+                    post.setMediaType("VIDEO");
+                } else {
+                    post.setMediaType("IMAGE");
+                }
+            }
+
             return postRepository.save(post);
         }
         throw new RuntimeException("User not found");
@@ -37,6 +52,10 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    public List<Post> getPostsByUserId(Long userId) {
+        return postRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     public void deletePost(Long postId, Long userId) {

@@ -17,17 +17,21 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    public Post createPost(@RequestBody Map<String, String> payload) {
-        Long userId = Long.parseLong(payload.get("userId"));
-        String content = payload.get("content");
-        String imageUrl = payload.get("imageUrl");
-        return postService.createPost(userId, content, imageUrl);
+    @PostMapping(consumes = { "multipart/form-data" })
+    public Post createPost(@RequestParam("userId") Long userId,
+            @RequestParam("content") String content,
+            @RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
+        return postService.createPost(userId, content, file);
     }
 
     @GetMapping
     public List<Post> getAllPosts() {
         return postService.getAllPosts();
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Post> getPostsByUser(@PathVariable Long userId) {
+        return postService.getPostsByUserId(userId);
     }
 
     @PostMapping("/{postId}/like")

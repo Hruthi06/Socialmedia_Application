@@ -4,22 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialConnect | Cyber Feed</title>
+    <title>SocialConnect | Feed</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg: #050505;
-            --white: #111111;
-            --border: #22d3ee44;
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --link: #00f3ff;
-            --neon-pink: #ff007f;
-            --neon-cyan: #00f3ff;
-            --neon-purple: #9d00ff;
-            --card-glow: 0 0 15px rgba(0, 243, 255, 0.2);
+            --font-size: 16px;
+            --background: #ffffff;
+            --foreground: oklch(0.145 0 0);
+            --card: #ffffff;
+            --card-foreground: oklch(0.145 0 0);
+            --primary: #7c3aed;
+            --primary-foreground: oklch(1 0 0);
+            --secondary: oklch(0.95 0.0058 264.53);
+            --secondary-foreground: #030213;
+            --muted: #ececf0;
+            --muted-foreground: #717182;
+            --accent: #e9ebef;
+            --accent-foreground: #030213;
+            --destructive: #d4183d;
+            --destructive-foreground: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --input-background: #f3f3f5;
+            --radius: 0.625rem;
+            --ring: oklch(0.708 0 0);
+        }
+
+        .dark {
+            --background: oklch(0.145 0 0);
+            --foreground: oklch(0.985 0 0);
+            --card: oklch(0.145 0 0);
+            --card-foreground: oklch(0.985 0 0);
+            --primary: #a78bfa;
+            --primary-foreground: oklch(0.205 0 0);
+            --secondary: oklch(0.269 0 0);
+            --secondary-foreground: oklch(0.985 0 0);
+            --muted: oklch(0.269 0 0);
+            --muted-foreground: oklch(0.708 0 0);
+            --border: oklch(0.269 0 0);
+            --input-background: oklch(0.269 0 0);
         }
 
         * {
@@ -30,383 +54,636 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-primary);
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            padding-bottom: 70px;
+            /* Space for bottom nav */
+            transition: background-color 0.3s;
         }
 
-        /* Nav */
-        nav {
-            position: fixed;
+        /* Header */
+        header {
+            position: sticky;
             top: 0;
-            width: 100%;
-            height: 70px;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid var(--neon-cyan);
             z-index: 1000;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
+            backdrop-filter: blur(10px);
         }
 
-        .nav-content {
+        .header-content {
             width: 100%;
-            max-width: 975px;
-            padding: 0 20px;
+            max-width: 600px;
+            padding: 0 16px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .logo {
-            font-size: 1.8rem;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
             font-weight: 800;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px var(--neon-cyan));
-            cursor: pointer;
+            letter-spacing: -0.5px;
         }
 
-        .nav-icons {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-icons i {
-            cursor: pointer;
-            color: var(--neon-cyan);
-            transition: 0.3s;
-            filter: drop-shadow(0 0 5px var(--neon-cyan));
-        }
-
-        .nav-icons i:hover {
-            color: var(--neon-pink);
-            filter: drop-shadow(0 0 8px var(--neon-pink));
-            transform: scale(1.2);
-        }
-
-        /* Main */
-        main {
-            max-width: 935px;
-            margin: 90px auto 0;
-            display: flex;
-            gap: 28px;
-            padding: 0 20px;
-        }
-
-        .feed-container {
-            flex: 1;
-            max-width: 614px;
-        }
-
-        /* Post Card */
-        .post {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: var(--card-glow);
+        /* Citizens Scroller */
+        .citizens-container {
+            border-bottom: 1px solid var(--border);
+            background: var(--card);
+            padding: 16px 0;
             overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .citizens-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 0 16px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .citizens-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .citizen-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            cursor: pointer;
+            width: 70px;
+            transition: transform 0.2s;
+        }
+
+        .citizen-item:hover {
+            transform: scale(1.05);
+        }
+
+        .citizen-avatar-ring {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--primary), #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .citizen-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .citizen-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            color: var(--foreground);
+            opacity: 0.9;
+        }
+
+        /* Feed */
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .post {
+            border-bottom: 1px solid var(--border);
+            background: var(--card);
+            margin-bottom: 8px;
         }
 
         .post-header {
-            padding: 14px 16px;
+            padding: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
-        .user-info {
+        .post-user {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
         }
 
-        .avatar {
+        .post-avatar {
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+            background: var(--secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            color: white;
+            font-weight: 600;
+            color: var(--secondary-foreground);
         }
 
-        .post-content {
-            padding: 0 16px 16px;
-            font-size: 0.95rem;
-            line-height: 1.5;
+        .post-username {
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .post-img {
+        .post-img-container {
             width: 100%;
-            max-height: 600px;
+            background: var(--muted);
+            aspect-ratio: 1/1;
+            overflow: hidden;
+        }
+
+        .post-img-container img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
         }
 
         .post-actions {
-            padding: 12px 16px;
+            padding: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
-        .action-btns {
+        .action-group {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
 
-        .action-btns i {
-            font-size: 24px;
+        .action-group i {
             cursor: pointer;
             transition: 0.2s;
         }
 
-        .action-btns i.liked {
-            color: var(--neon-pink);
-            filter: drop-shadow(0 0 8px var(--neon-pink));
+        .action-group i:hover {
+            transform: scale(1.1);
         }
 
-        .likes-count {
-            padding: 0 16px 12px;
+        .action-group i.liked {
+            color: var(--destructive);
+            fill: var(--destructive);
+        }
+
+        .post-info {
+            padding: 0 12px 16px;
+        }
+
+        .likes-text {
             font-weight: 700;
             font-size: 0.9rem;
+            margin-bottom: 6px;
         }
 
-        .delete-btn {
-            color: var(--error);
-            cursor: pointer;
-            opacity: 0.6;
-            transition: 0.3s;
+        .caption {
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
-        .delete-btn:hover {
-            opacity: 1;
-            filter: drop-shadow(0 0 5px red);
-        }
-
-        /* Create Post Area */
-        .create-post-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
-        }
-
-        .modal-content textarea,
-        .modal-content input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-            color: white;
-            margin-bottom: 15px;
-            outline: none;
-            transition: 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .modal-content textarea:focus,
-        .modal-content input:focus {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        .btn-neon {
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            color: white;
+        .caption-user {
             font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-right: 6px;
+        }
+
+        /* Bottom Nav */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
             width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .btn-neon:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.2);
-            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+        .nav-items {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 16px;
         }
 
-        /* Modal */
+        .nav-item {
+            color: var(--foreground);
+            opacity: 0.6;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .create-btn-circular {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-top: -25px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+            transition: 0.3s;
+        }
+
+        .create-btn-circular:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* Modals */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
             display: none;
-            align-items: center;
+            align-items: flex-end;
+            /* Mobile style slide-up */
             justify-content: center;
             z-index: 2000;
         }
 
         .modal-content {
-            background: rgba(17, 17, 17, 0.95);
-            padding: 40px;
-            border-radius: 24px;
-            border: 1px solid var(--neon-cyan);
+            background: var(--card);
             width: 100%;
-            max-width: 480px;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
-            backdrop-filter: blur(20px);
+            max-width: 600px;
+            border-radius: var(--radius) var(--radius) 0 0;
+            padding: 24px;
+            animation: slideUp 0.3s ease-out;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            cursor: pointer;
-            color: var(--text-secondary);
-        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
 
-        /* Sidebar */
-        .sidebar {
-            width: 319px;
-            position: sticky;
-            top: 90px;
-            height: fit-content;
-        }
-
-        @media (max-width: 900px) {
-            .sidebar {
-                display: none;
+            to {
+                transform: translateY(0);
             }
         }
 
-        .profile-mini {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Profile View */
-        .profile-view {
-            text-align: center;
+        .close-bar {
+            width: 40px;
+            height: 4px;
+            background: var(--muted);
+            border-radius: 2px;
+            margin: -12px auto 20px;
+            cursor: pointer;
         }
 
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--neon-cyan);
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            background: #000;
-            color: var(--neon-cyan);
-            box-shadow: 0 0 20px var(--neon-cyan);
+        textarea,
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--foreground);
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .btn-post {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-post:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        #uploadZone:hover {
+            background: var(--accent) !important;
+            border-color: var(--primary) !important;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 0;
+            }
+
+            nav.bottom-nav {
+                top: 0;
+                bottom: auto;
+                height: 60px;
+                border-bottom: 1px solid var(--border);
+                border-top: none;
+            }
+
+            header {
+                display: none;
+            }
+
+            .modal {
+                align-items: center;
+            }
+
+            .modal-content {
+                border-radius: 24px;
+                width: 90%;
+                max-width: 450px;
+            }
+
+            main {
+                margin-top: 80px;
+            }
         }
     </style>
 </head>
 
-<body>
-    <nav>
-        <div class="nav-content">
-            <div class="logo" onclick="location.reload()">SocialConnect</div>
-            <div class="nav-icons">
-                <i data-lucide="home"></i>
-                <i data-lucide="plus-square" onclick="toggleModal('postModal')"></i>
-                <i data-lucide="user" id="profileIcon"></i>
-                <i data-lucide="log-out" onclick="logout()"></i>
+<body class="dark">
+    <!-- Mobile Header -->
+    <header>
+        <div class="header-content">
+            <div class="brand" onclick="location.reload()">
+                <div class="logo-icon"><i data-lucide="sparkles" size="18"></i></div>
+                <h1>SocialSphere</h1>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <i data-lucide="moon" id="themeToggle" onclick="toggleTheme()" cursor="pointer"></i>
+                <i data-lucide="bell" cursor="pointer"></i>
             </div>
         </div>
-    </nav>
+    </header>
 
     <main>
-        <div class="feed-container">
-            <!-- Feed -->
-            <div id="postFeed">
-                <!-- Posts dynamic -->
-            </div>
-        </div>
-
-        <div class="sidebar">
-            <div class="profile-mini">
-                <div class="avatar" id="myAvatar">?</div>
-                <div>
-                    <div style="font-weight:700" id="myUsername">Loading...</div>
-                    <div style="font-size:0.8rem; color:var(--text-secondary)" id="myRole">Member</div>
+        <!-- Citizens Hub -->
+        <section class="citizens-container">
+            <div class="citizens-scroll" id="citizensList">
+                <!-- Current User first -->
+                <div class="citizen-item" onclick="document.getElementById('profileBtn').click()">
+                    <div class="citizen-avatar-ring">
+                        <div class="citizen-avatar" id="myTopAvatar">?</div>
+                    </div>
+                    <span class="citizen-name" id="myTopName">You</span>
                 </div>
+                <!-- Other citizens injected here -->
             </div>
-            <div style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:15px; font-weight:600">Suggestions
-            </div>
-            <div id="suggestions"></div>
+        </section>
+
+        <!-- Feed -->
+        <div id="postFeed">
+            <!-- Dynamic Posts -->
         </div>
     </main>
 
-    <!-- Post Modal -->
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <div class="nav-item active" onclick="location.reload()"><i data-lucide="home"></i></div>
+            <div class="nav-item" onclick="toggleModal('searchModal')"><i data-lucide="search"></i></div>
+            <div class="create-btn-circular" onclick="toggleModal('postModal')"><i data-lucide="plus" size="28"></i>
+            </div>
+            <div class="nav-item"><i data-lucide="heart"></i></div>
+            <div class="nav-item" id="profileBtn"><i data-lucide="user"></i></div>
+        </div>
+    </nav>
+
+    <!-- Create Post Modal -->
     <div class="modal" id="postModal">
         <div class="modal-content">
-            <i data-lucide="x" class="close-modal" onclick="toggleModal('postModal')"></i>
-            <h2 style="margin-bottom:20px; color:var(--neon-pink)">Create Cyber Post</h2>
-            <textarea id="postContent" placeholder="What's happening in the grid?" rows="4"></textarea>
-            <input type="text" id="postImageUrl" placeholder="Image URL (optional)">
-            <button class="btn-neon" onclick="submitPost()">Transmit to Grid</button>
+            <div class="close-bar" onclick="closePostModal()"></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2 style="margin: 0;">New Transmission</h2>
+                <div onclick="closePostModal()"
+                    style="cursor: pointer; width: 32px; height: 32px; border-radius: 50%; background: var(--muted); display: flex; align-items: center; justify-content: center; transition: 0.2s;"
+                    onmouseover="this.style.background='var(--accent)'"
+                    onmouseout="this.style.background='var(--muted)'">
+                    <i data-lucide="x" size="20"></i>
+                </div>
+            </div>
+            <textarea id="postContent" placeholder="What's happening?" rows="4"
+                style="background: var(--input-background); border: 1px solid var(--border); border-radius: 12px; transition: 0.2s;"></textarea>
+
+            <div id="uploadZone" onclick="document.getElementById('postFile').click()"
+                style="border: 2px dashed var(--border); border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: var(--input-background); transition: 0.3s; margin-bottom: 20px; position: relative; overflow: hidden;">
+                <div id="uploadPrompt">
+                    <i data-lucide="upload-cloud" size="32"
+                        style="color: var(--primary); margin-bottom: 12px; opacity: 0.8;"></i>
+                    <p style="font-size: 0.95rem; font-weight: 700; color: var(--foreground);">Capture or Select Media
+                    </p>
+                    <p style="font-size: 0.8rem; color: var(--muted-foreground); margin-top: 6px;">Inject images or
+                        videos into the grid</p>
+                </div>
+                <div id="mediaPreviewContainer"
+                    style="display: none; width: 100%; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; background: #000;">
+                    <!-- Preview content injected here -->
+                    <div id="previewContent"
+                        style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    </div>
+                    <div onclick="event.stopPropagation(); clearMedia()"
+                        style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; backdrop-filter: blur(4px);">
+                        <i data-lucide="x" size="18"></i>
+                    </div>
+                </div>
+            </div>
+
+            <input type="file" id="postFile" accept="image/*,video/*" style="display: none;"
+                onchange="handleFileSelect(this)">
+
+            <button class="btn-post" id="shareBtn" onclick="submitPost()"
+                style="box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);">Share to Feed</button>
         </div>
     </div>
 
     <!-- Profile Modal -->
     <div class="modal" id="profileModal">
-        <div class="modal-content profile-view">
-            <i data-lucide="x" class="close-modal" onclick="toggleModal('profileModal')"></i>
-            <div class="profile-avatar" id="viewAvatar">?</div>
-            <h2 id="viewUsername" style="margin-bottom:5px;">Username</h2>
-            <p id="viewRole" style="color:var(--neon-cyan); margin-bottom:20px;">Role</p>
+        <div class="modal-content" style="padding: 0; overflow-y: auto; max-height: 90vh;">
             <div
-                style="display:flex; justify-content:space-around; padding-top:20px; border-top:1px solid var(--border)">
-                <div>
-                    <div style="font-weight:700">1.2k</div>
-                    <div style="font-size:0.7rem">Followers</div>
+                style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--card); z-index: 10;">
+                <h2 id="viewUsername" style="font-size: 1.1rem;">Username</h2>
+                <i data-lucide="x" class="close-modal" style="position: static;"
+                    onclick="toggleModal('profileModal')"></i>
+            </div>
+
+            <div style="padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 24px;">
+                    <div id="viewAvatarContainer"
+                        style="width: 80px; height: 80px; border-radius: 50%; background: var(--secondary); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;">
+                        <span id="viewAvatarLetter">?</span>
+                        <img id="viewAvatarImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    </div>
+                    <div style="display: flex; gap: 20px; flex: 1; justify-content: space-around;">
+                        <div style="text-align: center;">
+                            <div id="postCount" style="font-weight: 700; font-size: 1.1rem;">0</div>
+                            <div style="font-size: 0.75rem; color: var(--muted-foreground);">Posts</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-weight: 700; font-size: 1.1rem;">0</div>
+                            <div style="font-size: 0.75rem; color: var(--muted-foreground);">Followers</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-weight: 700; font-size: 1.1rem;">0</div>
+                            <div style="font-size: 0.75rem; color: var(--muted-foreground);">Following</div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <div style="font-weight:700">450</div>
-                    <div style="font-size:0.7rem">Following</div>
+
+                <div style="margin-bottom: 24px;">
+                    <p id="viewRole" style="font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">Role</p>
+                    <p id="viewBio" style="font-size: 0.85rem; color: var(--foreground); opacity: 0.8;">No bio yet.</p>
                 </div>
-                <div>
-                    <div style="font-weight:700">89</div>
-                    <div style="font-size:0.7rem">Posts</div>
+
+                <div id="selfProfileControls"
+                    style="display: none; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn-post" onclick="showEditProfile()">Edit Profile</button>
+                    <button class="btn-post"
+                        style="padding: 10px; font-size: 0.85rem; background: var(--muted); color: var(--foreground); border: 1px solid var(--border);"
+                        onclick="logout()">Logout</button>
+                </div>
+
+                <!-- Edit Profile Form (Hidden) -->
+                <div id="editProfileForm"
+                    style="display: none; margin-bottom: 24px; border: 1px solid var(--border); padding: 16px; border-radius: 12px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 12px;">Update Profile</h3>
+                    <textarea id="editBio" placeholder="Tell us about yourself..." rows="3"
+                        style="font-size: 0.85rem;"></textarea>
+                    <input type="file" id="editAvatarFile" accept="image/*"
+                        style="font-size: 0.8rem; margin-bottom: 12px;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-post" style="padding: 8px; font-size: 0.85rem;"
+                            onclick="saveProfile()">Save</button>
+                        <button class="btn-post"
+                            style="padding: 8px; font-size: 0.85rem; background: var(--muted); color: var(--foreground);"
+                            onclick="hideEditProfile()">Cancel</button>
+                    </div>
+                </div>
+
+                <div id="adminControls"
+                    style="display: none; border-top: 1px solid var(--border); padding-top: 20px; margin-bottom: 20px;">
+                    <button class="btn-post" style="background: var(--destructive);" onclick="toggleUserBlock()">Block
+                        Citizen</button>
+                </div>
+
+                <!-- User Posts Grid -->
+                <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="grid" size="18"></i> Transmissions
+                    </h3>
+                    <div id="userPostsGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;">
+                        <!-- User's posts will be loaded here -->
+                    </div>
                 </div>
             </div>
-            <!-- Admin Controls -->
-            <div id="adminControls" style="margin-top:20px; display:none; flex-direction:column; gap:10px;">
-                <button id="blockBtn" class="btn-neon" style="background:#ff2e63; border:none;"
-                    onclick="toggleUserBlock()">Block Citizen</button>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal" id="searchModal">
+        <div class="modal-content">
+            <div class="close-bar" onclick="toggleModal('searchModal')"></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2 style="margin: 0;">Search the Grid</h2>
+                <div onclick="toggleModal('searchModal')"
+                    style="cursor: pointer; width: 32px; height: 32px; border-radius: 50%; background: var(--muted); display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="x" size="20"></i>
+                </div>
+            </div>
+            <div style="position: relative; margin-bottom: 20px;">
+                <input type="text" id="searchInput" placeholder="Enter username..."
+                    style="padding-left: 44px; margin-bottom: 0;">
+                <i data-lucide="search" size="18"
+                    style="position: absolute; left: 14px; top: 14px; color: var(--muted-foreground);"></i>
+            </div>
+            <button class="btn-post" onclick="searchUser()">Search Citizen</button>
+            <div id="searchError" style="display: none; margin-top: 20px; text-align: center; animation: fadeIn 0.3s;">
+                <div
+                    style="background: var(--muted); padding: 24px; border-radius: 16px; border: 1px solid var(--border);">
+                    <i data-lucide="user-minus" size="48"
+                        style="color: var(--destructive); margin-bottom: 12px; opacity: 0.5;"></i>
+                    <h3 style="font-size: 1rem; margin-bottom: 4px;">User Not Found</h3>
+                    <p style="font-size: 0.8rem; color: var(--muted-foreground);">The citizen you're looking for isn't
+                        in our database.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Auth Guard
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
-            window.location.href = '/login.html';
-        }
+        if (!currentUser) window.location.href = '/login.html';
 
         lucide.createIcons();
 
-        // Session Display
-        document.getElementById('myUsername').textContent = currentUser?.username || 'Guest';
-        document.getElementById('myRole').textContent = currentUser?.role || 'Member';
-        document.getElementById('myAvatar').textContent = (currentUser?.username || '?').charAt(0);
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            document.getElementById('themeToggle').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+        }
 
         function toggleModal(id) {
             const m = document.getElementById(id);
@@ -418,154 +695,344 @@
             window.location.href = '/login.html';
         }
 
+        document.getElementById('profileBtn').onclick = () => {
+            viewProfile(currentUser.id, currentUser.username, currentUser.role);
+        };
+
         async function fetchPosts() {
             try {
                 const res = await fetch('/api/posts');
                 const posts = await res.json();
                 renderFeed(posts);
-            } catch (e) { console.error(e); }
-        }
-
-        async function fetchUsers() {
-            try {
-                const res = await fetch('/users');
-                const users = await res.json();
-                renderSuggestions(users);
-            } catch (e) { console.error(e); }
+            } catch (e) { }
         }
 
         function renderFeed(posts) {
             const feed = document.getElementById('postFeed');
-
-            // Create New Post Prompt at Top
-            let html = `
-                <div class="create-post-card" onclick="toggleModal('postModal')" style="cursor:pointer; transition:0.3s; display:flex; align-items:center; gap:15px; border-style:dashed;">
-                    <div class="avatar" style="width:40px; height:40px; font-size:1rem; flex-shrink:0;">${currentUser.username.charAt(0)}</div>
-                    <div style="color:var(--text-secondary); font-size:1rem;">Broadcast a new transmission...</div>
-                    <i data-lucide="image" style="margin-left:auto; color:var(--neon-cyan); opacity:0.6;"></i>
-                </div>
-            `;
-
             if (posts.length === 0) {
-                feed.innerHTML = html + `
-                    <div style="text-align:center; padding:80px 20px; color:var(--text-secondary); background:var(--white); border-radius:16px; border:1px dashed var(--border); margin-top:20px;">
-                        <i data-lucide="wifi-off" style="width:48px; height:48px; margin-bottom:15px; opacity:0.5;"></i>
-                        <h3 style="color:white; margin-bottom:5px;">Static Detected</h3>
-                        <p style="font-size:0.9rem;">No active transmissions found in the grid.</p>
-                    </div>
-                `;
-                lucide.createIcons();
+                feed.innerHTML = `<div style="padding:40px; text-align:center; color:var(--muted-foreground)">No posts yet</div>`;
                 return;
             }
-            feed.innerHTML = html + posts.map(post => `
-                <div class="post">
+            feed.innerHTML = posts.map(post => `
+                <article class="post">
                     <div class="post-header">
-                        <div class="user-info" onclick="viewProfile(${post.user.id}, '${post.user.username}', '${post.user.role}', ${post.user.blocked})">
-                            <div class="avatar">${post.user.username.charAt(0)}</div>
-                            <span style="font-weight:700">${post.user.username}</span>
+                        <div class="post-user" onclick="viewProfile(${post.user.id})">
+                            <div class="post-avatar">
+                                ${post.user.profilePicture ?
+                    `<img src="${post.user.profilePicture}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` :
+                    post.user.username.charAt(0)
+                }
+                            </div>
+                            <span class="post-username">${post.user.username}</span>
                         </div>
-                        ${(post.user.id == currentUser.id || currentUser.role === 'ADMIN') ? `<i data-lucide="trash-2" class="delete-btn" onclick="deletePost(${post.id})"></i>` : '<i data-lucide="more-horizontal"></i>'}
+                        <i data-lucide="more-horizontal"></i>
                     </div>
-                    ${post.imageUrl ? `<img src="${post.imageUrl}" class="post-img" onerror="this.style.display='none'">` : ''}
-                    <div class="post-content">
-                        <span style="font-weight:700; margin-right:8px">${post.user.username}</span>
-                        ${post.content}
-                    </div>
+                    ${post.mediaUrl ? `
+                        <div class="post-img-container">
+                            ${post.mediaType === 'VIDEO' ?
+                        `<video src="${post.mediaUrl}" controls style="width:100%; height:100%; object-fit:cover;"></video>` :
+                        `<img src="${post.mediaUrl}" onerror="this.parentElement.style.display='none'">`
+                    }
+                        </div>
+                    ` : ''}
                     <div class="post-actions">
-                        <div class="action-btns">
+                        <div class="action-group">
                             <i data-lucide="heart" onclick="likePost(${post.id})"></i>
                             <i data-lucide="message-circle"></i>
                             <i data-lucide="send"></i>
                         </div>
                         <i data-lucide="bookmark"></i>
                     </div>
-                    <div class="likes-count">${post.likes} units of energy (likes)</div>
-                </div>
+                    <div class="post-info">
+                        <div class="likes-text">${post.likes.toLocaleString()} likes</div>
+                        <div class="caption">
+                            <span class="caption-user">${post.user.username}</span>${post.content}
+                        </div>
+                        ${(post.user.id == currentUser.id || currentUser.role === 'ADMIN') ?
+                    `<div style="margin-top:10px; color:var(--destructive); font-size:0.8rem; cursor:pointer" onclick="deletePost(${post.id})">Delete Post</div>` : ''}
+                    </div>
+                </article>
             `).join('');
             lucide.createIcons();
         }
 
-        function renderSuggestions(users) {
-            const list = document.getElementById('suggestions');
-            list.innerHTML = users.slice(0, 5).map(u => `
-                <div class="profile-mini" style="margin-bottom:12px; cursor:pointer" onclick="viewProfile(${u.id}, '${u.username}', '${u.role}', ${u.blocked})">
-                    <div class="avatar" style="width:30px; height:30px; font-size:0.75rem">${u.username.charAt(0)}</div>
-                    <div>
-                        <div style="font-size:0.85rem; font-weight:700">${u.username}</div>
-                        <div style="font-size:0.7rem; color:${u.blocked ? 'var(--error)' : 'var(--neon-cyan)'}">${u.blocked ? 'SUSPENDED' : 'New Member'}</div>
-                    </div>
-                </div>
-            `).join('');
+        function closePostModal() {
+            toggleModal('postModal');
+            clearMedia();
+            document.getElementById('postContent').value = '';
+        }
+
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const prompt = document.getElementById('uploadPrompt');
+            const container = document.getElementById('mediaPreviewContainer');
+            const preview = document.getElementById('previewContent');
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                prompt.style.display = 'none';
+                container.style.display = 'block';
+
+                if (file.type.startsWith('image/')) {
+                    preview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: contain;">`;
+                } else if (file.type.startsWith('video/')) {
+                    preview.innerHTML = `<video src="${e.target.result}" controls style="width: 100%; height: 100%; object-fit: contain;"></video>`;
+                }
+                lucide.createIcons();
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function clearMedia() {
+            document.getElementById('postFile').value = '';
+            document.getElementById('uploadPrompt').style.display = 'block';
+            document.getElementById('mediaPreviewContainer').style.display = 'none';
+            document.getElementById('previewContent').innerHTML = '';
         }
 
         async function submitPost() {
             const content = document.getElementById('postContent').value;
-            const imageUrl = document.getElementById('postImageUrl').value;
-            if (!content) return alert('Cannot transmit empty data');
+            const fileInput = document.getElementById('postFile');
+            const file = fileInput.files[0];
+
+            if (!content) return alert('Captions are required');
+
+            const formData = new FormData();
+            formData.append('userId', currentUser.id);
+            formData.append('content', content);
+            if (file) {
+                formData.append('file', file);
+            }
 
             try {
+                const btn = document.querySelector('.btn-post');
+                btn.disabled = true;
+                btn.textContent = 'Uploading...';
+
                 await fetch('/api/posts', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, content, imageUrl })
+                    body: formData
                 });
-                document.getElementById('postContent').value = '';
-                document.getElementById('postImageUrl').value = '';
+
                 toggleModal('postModal');
-                fetchPosts();
-            } catch (e) { alert('Transmission failed'); }
+                location.reload();
+            } catch (e) {
+                alert('Upload failed');
+                const btn = document.querySelector('.btn-post');
+                btn.disabled = false;
+                btn.textContent = 'Share to Feed';
+            }
         }
 
         async function likePost(id) {
-            try {
-                await fetch(`/api/posts/${id}/like`, { method: 'POST' });
-                fetchPosts();
-            } catch (e) { }
+            await fetch(`/api/posts/${id}/like`, { method: 'POST' });
+            fetchPosts();
         }
 
         async function deletePost(id) {
-            if (!confirm('Purge this transmission from the grid?')) return;
-            try {
+            if (confirm('Delete post?')) {
                 await fetch(`/api/posts/${id}?userId=${currentUser.id}`, { method: 'DELETE' });
                 fetchPosts();
-            } catch (e) { alert('Purge failed'); }
+            }
         }
 
         let viewedUserId = null;
-        function viewProfile(userId, user, role, isBlocked) {
-            viewedUserId = userId;
-            document.getElementById('viewUsername').textContent = user;
-            document.getElementById('viewRole').textContent = (role || 'Cyber Citizen') + (isBlocked ? ' [SUSPENDED]' : '');
-            document.getElementById('viewAvatar').textContent = (user || '?').charAt(0);
+        async function viewProfile(id) {
+            viewedUserId = id;
+            hideEditProfile(); // Reset edit form visibility
 
-            // Admin Controls
-            const adminControls = document.getElementById('adminControls');
-            const blockBtn = document.getElementById('blockBtn');
+            try {
+                const userRes = await fetch(`/users/${id}`);
+                const user = await userRes.json();
 
-            if (currentUser.role === 'ADMIN' && user !== currentUser.username) {
-                adminControls.style.display = 'flex';
-                blockBtn.textContent = isBlocked ? 'Unblock Citizen' : 'Block Citizen';
-                blockBtn.style.background = isBlocked ? '#00f3ff' : '#ff2e63';
-            } else {
-                adminControls.style.display = 'none';
+                document.getElementById('viewUsername').textContent = user.username;
+                document.getElementById('viewRole').textContent = user.role;
+                document.getElementById('viewBio').textContent = user.bio || "No bio yet.";
+
+                const letter = document.getElementById('viewAvatarLetter');
+                const img = document.getElementById('viewAvatarImg');
+                if (user.profilePicture) {
+                    letter.style.display = 'none';
+                    img.src = user.profilePicture;
+                    img.style.display = 'block';
+                } else {
+                    letter.textContent = user.username.charAt(0);
+                    letter.style.display = 'block';
+                    img.style.display = 'none';
+                }
+
+                // Show/hide controls
+                document.getElementById('selfProfileControls').style.display = (id == currentUser.id) ? 'flex' : 'none';
+
+                const adminControls = document.getElementById('adminControls');
+                if (currentUser.role === 'ADMIN' && user.username !== currentUser.username) {
+                    adminControls.style.display = 'block';
+                } else {
+                    adminControls.style.display = 'none';
+                }
+
+                // Fetch user posts
+                const postsRes = await fetch(`/api/posts/user/${id}`);
+                const posts = await postsRes.json();
+                renderUserPosts(posts);
+
+                if (document.getElementById('profileModal').style.display !== 'flex') {
+                    toggleModal('profileModal');
+                }
+            } catch (e) {
+                console.error("Failed to load profile", e);
+            }
+        }
+
+        function renderUserPosts(posts) {
+            const grid = document.getElementById('userPostsGrid');
+            document.getElementById('postCount').textContent = posts.length;
+
+            if (posts.length === 0) {
+                grid.innerHTML = `<div style="grid-column: span 3; padding: 20px; text-align: center; color: var(--muted-foreground); font-size: 0.8rem;">No posts yet</div>`;
+                return;
             }
 
+            grid.innerHTML = posts.map(post => `
+                <div style="aspect-ratio: 1/1; background: var(--muted); cursor: pointer; overflow: hidden;" onclick="focusPost(${post.id})">
+                    ${post.mediaUrl ?
+                    (post.mediaType === 'VIDEO' ?
+                        `<video src="${post.mediaUrl}" style="width:100%; height:100%; object-fit:cover;"></video>` :
+                        `<img src="${post.mediaUrl}" style="width:100%; height:100%; object-fit:cover;">`
+                    ) : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:10px; font-size:0.6rem; text-align:center;">${post.content.substring(0, 30)}...</div>`
+                }
+                </div>
+            `).join('');
+        }
+
+        function showEditProfile() {
+            document.getElementById('editProfileForm').style.display = 'block';
+            document.getElementById('editBio').value = document.getElementById('viewBio').textContent === "No bio yet." ? "" : document.getElementById('viewBio').textContent;
+        }
+
+        function hideEditProfile() {
+            document.getElementById('editProfileForm').style.display = 'none';
+        }
+
+        async function saveProfile() {
+            const bio = document.getElementById('editBio').value;
+            const fileInput = document.getElementById('editAvatarFile');
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append('bio', bio);
+            if (file) {
+                formData.append('file', file);
+            }
+
+            try {
+                const res = await fetch(`/users/${currentUser.id}/profile`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const updatedUser = await res.json();
+
+                // Update local current user if needed (e.g. if we want to cache avatar)
+                // localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+                viewProfile(currentUser.id); // Refresh view
+                hideEditProfile();
+            } catch (e) {
+                alert("Failed to update profile");
+            }
+        }
+
+        function focusPost(id) {
+            // Optional: Implement post detail view or scroll to post
             toggleModal('profileModal');
+            // Logic to find and scroll to post could go here
+        }
+
+        async function searchUser() {
+            const username = document.getElementById('searchInput').value.trim();
+            const errorDiv = document.getElementById('searchError');
+            errorDiv.style.display = 'none';
+
+            if (!username) return;
+
+            try {
+                const res = await fetch(`/users/search?username=${encodeURIComponent(username)}`);
+                if (res.ok) {
+                    const text = await res.text();
+                    if (!text) {
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    const user = JSON.parse(text);
+                    if (user && user.id) {
+                        toggleModal('searchModal');
+                        viewProfile(user.id);
+                        document.getElementById('searchInput').value = '';
+                    } else {
+                        errorDiv.style.display = 'block';
+                    }
+                } else {
+                    errorDiv.style.display = 'block';
+                }
+            } catch (e) {
+                errorDiv.style.display = 'block';
+            }
         }
 
         async function toggleUserBlock() {
-            if (!viewedUserId) return;
-            try {
-                await fetch(`/users/${viewedUserId}/toggle-block`, { method: 'POST' });
-                toggleModal('profileModal');
-                fetchUsers(); // Refresh suggestions/status
-                fetchPosts(); // Refresh feed in case posts should be hidden (advanced)
-            } catch (e) { alert('Toggle block failed'); }
+            await fetch(`/users/${viewedUserId}/toggle-block`, { method: 'POST' });
+            location.reload();
         }
 
-        // Initialize
+        async function initCitizensHub() {
+            try {
+                // Fetch all users
+                const res = await fetch('/users');
+                const users = await res.json();
+
+                const list = document.getElementById('citizensList');
+
+                // Set current user data in the first item
+                const me = users.find(u => u.id === currentUser.id);
+                if (me) {
+                    const myAvatar = document.getElementById('myTopAvatar');
+                    if (me.profilePicture) {
+                        myAvatar.innerHTML = `<img src="${me.profilePicture}" style="width:100%; height:100%; object-fit:cover;">`;
+                    } else {
+                        myAvatar.textContent = me.username.charAt(0);
+                    }
+                }
+
+                // Append other users
+                users.forEach(user => {
+                    if (user.id === currentUser.id) return;
+
+                    const item = document.createElement('div');
+                    item.className = 'citizen-item';
+                    item.onclick = () => viewProfile(user.id);
+
+                    item.innerHTML = `
+                        <div class="citizen-avatar-ring">
+                            <div class="citizen-avatar">
+                                ${user.profilePicture ?
+                            `<img src="${user.profilePicture}" style="width:100%; height:100%; object-fit:cover;">` :
+                            user.username.charAt(0)
+                        }
+                            </div>
+                        </div>
+                        <span class="citizen-name">${user.username}</span>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (e) {
+                console.error("Failed to init Citizens Hub", e);
+            }
+        }
+
         fetchPosts();
-        fetchUsers();
+        initCitizensHub();
     </script>
 </body>
 

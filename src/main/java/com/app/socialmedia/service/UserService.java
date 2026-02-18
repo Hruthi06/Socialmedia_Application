@@ -10,9 +10,35 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
+    }
+
+    public User findById(Long id) {
+        if (id == null)
+            return null;
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User updateProfile(Long userId, String bio, org.springframework.web.multipart.MultipartFile file) {
+        if (userId == null)
+            throw new RuntimeException("User ID is required");
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (bio != null) {
+            user.setBio(bio);
+        }
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = fileStorageService.storeFile(file);
+            user.setProfilePicture("/uploads/" + fileName);
+        }
+
+        return userRepository.save(user);
     }
 
     public User saveUser(User user) {
@@ -48,5 +74,9 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
 }
