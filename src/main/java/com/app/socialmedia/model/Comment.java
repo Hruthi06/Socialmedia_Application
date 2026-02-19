@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "comments")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,26 +14,20 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private String imageUrl;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany
-    @JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private java.util.Set<User> likedBy = new java.util.HashSet<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Comment> comments = new java.util.ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     private LocalDateTime createdAt;
 
-    public Post() {
+    public Comment() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -50,14 +44,6 @@ public class Post {
         this.content = content;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public User getUser() {
         return user;
     }
@@ -66,20 +52,12 @@ public class Post {
         this.user = user;
     }
 
-    public java.util.Set<User> getLikedBy() {
-        return likedBy;
+    public Post getPost() {
+        return post;
     }
 
-    public void setLikedBy(java.util.Set<User> likedBy) {
-        this.likedBy = likedBy;
-    }
-
-    public java.util.List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(java.util.List<Comment> comments) {
-        this.comments = comments;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public LocalDateTime getCreatedAt() {

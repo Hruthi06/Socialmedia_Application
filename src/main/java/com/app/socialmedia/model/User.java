@@ -15,6 +15,13 @@ public class User {
     private String role;
     private boolean isBlocked = false;
 
+    @ManyToMany
+    @JoinTable(name = "user_follows", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private java.util.Set<User> followers = new java.util.HashSet<>();
+
+    @ManyToMany(mappedBy = "followers")
+    private java.util.Set<User> following = new java.util.HashSet<>();
+
     public User() {
     }
 
@@ -52,5 +59,21 @@ public class User {
 
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
+    }
+
+    public java.util.Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(java.util.Set<User> followers) {
+        this.followers = followers;
+    }
+
+    public java.util.Set<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(java.util.Set<User> following) {
+        this.following = following;
     }
 }

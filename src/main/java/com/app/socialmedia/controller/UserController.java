@@ -30,4 +30,14 @@ public class UserController {
     public void toggleBlock(@PathVariable Long userId) {
         userService.toggleBlock(userId);
     }
+
+    @PostMapping("/{userId}/follow/{targetId}")
+    public User followUser(@PathVariable Long userId, @PathVariable Long targetId) {
+        return userService.followUser(userId, targetId);
+    }
+
+    @PostMapping("/{userId}/unfollow/{targetId}")
+    public User unfollowUser(@PathVariable Long userId, @PathVariable Long targetId) {
+        return userService.unfollowUser(userId, targetId);
+    }
 }

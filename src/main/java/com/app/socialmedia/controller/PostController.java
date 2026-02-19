@@ -31,8 +31,13 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/like")
-    public Post likePost(@PathVariable Long postId) {
-        return postService.likePost(postId);
+    public Post likePost(@PathVariable Long postId, @RequestParam Long userId) {
+        return postService.likePost(postId, userId);
+    }
+
+    @PostMapping("/{postId}/comment")
+    public Post addComment(@PathVariable Long postId, @RequestParam Long userId, @RequestParam String content) {
+        return postService.addComment(postId, userId, content);
     }
 
     @DeleteMapping("/{postId}")
